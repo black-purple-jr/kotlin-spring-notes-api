@@ -1,0 +1,20 @@
+package me.bpxdevjr.notes.api.security
+
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.invoke
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.web.SecurityFilterChain
+
+@Configuration
+class SecurityConfig {
+
+    @Bean
+    fun filterChain(httpScurity: HttpSecurity): SecurityFilterChain {
+        return httpScurity
+            .csrf { csrf -> csrf.disable() }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .build()
+    }
+}
