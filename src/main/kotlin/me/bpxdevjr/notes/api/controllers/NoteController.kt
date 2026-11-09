@@ -36,9 +36,14 @@ class NoteController(private val repository: NoteRepository) {
     @PostMapping
     fun save(@RequestBody body: NoteRequest): NoteResponse {
         val ownerId = SecurityContextHolder.getContext().authentication?.principal as? String
+        println("Owner ID length: ${ownerId?.length}")
+        println("Owner ID valid: ${ObjectId.isValid(ownerId)}")
         val note = repository.save(
             Note(
-                id = body.id?.let { ObjectId(it) } ?: ObjectId.get(),
+                id = body.id
+                    ?.takeIf { it.isNotBlank() }
+                    ?.let { ObjectId(it) }
+                    ?: ObjectId.get(),
                 title = body.title,
                 content = body.content,
                 createdAt = Instant.now(),

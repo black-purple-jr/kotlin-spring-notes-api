@@ -37,8 +37,15 @@ class JWTService(@Value("\${JWT_SECRET_BASE64}") private val jwtSecret: String) 
     }
 
     fun validateAccessToken(token: String): Boolean {
-        val claims = parseAllClaims(token) ?: return false
-        val tokenType = claims["type"] as? String ?: return false
+        val claims = parseAllClaims(token) ?: run {
+            println("JWT parsing failed")
+            return false
+        }
+
+        val tokenType = claims["type"] as? String
+
+        println("JWT type claim: $tokenType")
+
         return tokenType == "access"
     }
 
@@ -49,24 +56,24 @@ class JWTService(@Value("\${JWT_SECRET_BASE64}") private val jwtSecret: String) 
     }
 
     fun getUserIdFromJWT(token: String): String {
-        val rawToken = if (token.startsWith("Bearer ")) {
-            token.removePrefix("Bearer ")
-        } else token
-
-        val claims = parseAllClaims(rawToken) ?: throw IllegalArgumentException("invalid token.")
+        val claims = parseAllClaims(token)
+            ?: throw IllegalArgumentException("Invalid token")
 
         return claims.subject
     }
 
     fun parseAllClaims(token: String): Claims? {
         return try {
+            val rawToken = token.removePrefix("Bearer ").trim()
+
             Jwts.parser()
                 .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseSignedClaims(rawToken)
                 .payload
 
         } catch (e: Exception) {
+            println("JWT parsing error: ${e.message}")
             null
         }
     }

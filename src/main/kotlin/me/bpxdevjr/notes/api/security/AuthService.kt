@@ -42,6 +42,9 @@ class AuthService(
             throw BadCredentialsException("Invalid Credentials")
         }
 
+        println("MongoDB User ID: ${user.id}")
+        println("MongoDB User ID length: ${user.id.toString().length}")
+
         val newAccessToken = jwtService.generateAccessToken(user.id.toString())
         val newRefreshToken = jwtService.generateRefreshToken(user.id.toString())
 
