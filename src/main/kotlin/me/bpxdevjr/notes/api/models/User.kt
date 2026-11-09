@@ -1,4 +1,4 @@
-package me.bpxdevjr.notes.api.model
+package me.bpxdevjr.notes.api.models
 
 import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id

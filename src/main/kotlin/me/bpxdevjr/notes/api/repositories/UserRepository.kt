@@ -1,6 +1,6 @@
-package me.bpxdevjr.notes.api.repository
+package me.bpxdevjr.notes.api.repositories
 
-import me.bpxdevjr.notes.api.model.User
+import me.bpxdevjr.notes.api.models.User
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.MongoRepository
 
