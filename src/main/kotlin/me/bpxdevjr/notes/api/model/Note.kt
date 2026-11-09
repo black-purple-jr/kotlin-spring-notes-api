@@ -6,7 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.Instant
 
 
-@Document
+@Document("notes")
 data class Note (
     @Id val id: ObjectId = ObjectId.get(),
     val ownerId: ObjectId,
