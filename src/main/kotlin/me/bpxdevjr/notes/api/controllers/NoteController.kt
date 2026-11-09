@@ -1,9 +1,9 @@
 package me.bpxdevjr.notes.api.controllers
 
+import jakarta.validation.constraints.NotBlank
 import me.bpxdevjr.notes.api.models.Note
 import me.bpxdevjr.notes.api.repositories.NoteRepository
 import org.bson.types.ObjectId
-import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import java.time.Instant
 
@@ -22,6 +21,7 @@ class NoteController(private val repository: NoteRepository) {
 
     data class NoteRequest(
         val id: String?,
+        @field:NotBlank(message = "Note title cannot be blank")
         val title: String,
         val content: String
     )
@@ -36,8 +36,6 @@ class NoteController(private val repository: NoteRepository) {
     @PostMapping
     fun save(@RequestBody body: NoteRequest): NoteResponse {
         val ownerId = SecurityContextHolder.getContext().authentication?.principal as? String
-        println("Owner ID length: ${ownerId?.length}")
-        println("Owner ID valid: ${ObjectId.isValid(ownerId)}")
         val note = repository.save(
             Note(
                 id = body.id

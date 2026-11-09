@@ -20,14 +20,9 @@ class JWTAuthFilter(private val jwtService: JWTService) : OncePerRequestFilter()
         val authHeader = request.getHeader("Authorization")?.trim()
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             val valid = jwtService.validateAccessToken(authHeader)
-            println("JWT valid: $valid")
 
             if (valid) {
                 val userId = jwtService.getUserIdFromJWT(authHeader)
-
-                println("JWT Subject: $userId")
-                println("JWT Subject length: ${userId.length}")
-
                 val auth = UsernamePasswordAuthenticationToken(
                     userId,
                     null,
@@ -35,8 +30,6 @@ class JWTAuthFilter(private val jwtService: JWTService) : OncePerRequestFilter()
                 )
 
                 SecurityContextHolder.getContext().authentication = auth
-
-                println("Principal: ${SecurityContextHolder.getContext().authentication?.principal}")
             }
         }
 

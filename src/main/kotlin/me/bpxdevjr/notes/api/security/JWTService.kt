@@ -4,7 +4,9 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatusCode
 import org.springframework.stereotype.Service
+import org.springframework.web.server.ResponseStatusException
 import java.util.Base64
 import java.util.Date
 
@@ -38,13 +40,10 @@ class JWTService(@Value("\${JWT_SECRET_BASE64}") private val jwtSecret: String) 
 
     fun validateAccessToken(token: String): Boolean {
         val claims = parseAllClaims(token) ?: run {
-            println("JWT parsing failed")
             return false
         }
 
         val tokenType = claims["type"] as? String
-
-        println("JWT type claim: $tokenType")
 
         return tokenType == "access"
     }
@@ -57,7 +56,7 @@ class JWTService(@Value("\${JWT_SECRET_BASE64}") private val jwtSecret: String) 
 
     fun getUserIdFromJWT(token: String): String {
         val claims = parseAllClaims(token)
-            ?: throw IllegalArgumentException("Invalid token")
+            ?: throw ResponseStatusException(HttpStatusCode.valueOf(401), "Invalid token")
 
         return claims.subject
     }
@@ -73,7 +72,6 @@ class JWTService(@Value("\${JWT_SECRET_BASE64}") private val jwtSecret: String) 
                 .payload
 
         } catch (e: Exception) {
-            println("JWT parsing error: ${e.message}")
             null
         }
     }

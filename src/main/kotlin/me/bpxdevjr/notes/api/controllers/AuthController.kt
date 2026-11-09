@@ -1,5 +1,7 @@
 package me.bpxdevjr.notes.api.controllers
 
+import jakarta.validation.constraints.Email
+import jakarta.validation.constraints.NotBlank
 import me.bpxdevjr.notes.api.security.AuthService
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(private val authService: AuthService) {
 
     data class AuthRequest(
+        @field:Email(message = "Invalid email address")
         val email: String,
+        @field:NotBlank(message = "Name cannot be blank")
         val password: String
     )
 
