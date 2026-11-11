@@ -17,7 +17,7 @@ import java.time.Instant
 
 
 @RestController
-@RequestMapping("/api/notes")
+@RequestMapping("/notes")
 class NoteController(private val repository: NoteRepository) {
 
     data class NoteRequest(
