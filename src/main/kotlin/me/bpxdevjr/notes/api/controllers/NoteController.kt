@@ -1,5 +1,6 @@
 package me.bpxdevjr.notes.api.controllers
 
+import jakarta.validation.Valid
 import jakarta.validation.constraints.NotBlank
 import me.bpxdevjr.notes.api.models.Note
 import me.bpxdevjr.notes.api.repositories.NoteRepository
@@ -16,7 +17,7 @@ import java.time.Instant
 
 
 @RestController
-@RequestMapping("/notes")
+@RequestMapping("/api/notes")
 class NoteController(private val repository: NoteRepository) {
 
     data class NoteRequest(
@@ -34,7 +35,8 @@ class NoteController(private val repository: NoteRepository) {
     )
 
     @PostMapping
-    fun save(@RequestBody body: NoteRequest): NoteResponse {
+    fun save(
+        @Valid @RequestBody body: NoteRequest): NoteResponse {
         val ownerId = SecurityContextHolder.getContext().authentication?.principal as? String
         val note = repository.save(
             Note(

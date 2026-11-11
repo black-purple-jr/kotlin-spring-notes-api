@@ -1,5 +1,6 @@
 package me.bpxdevjr.notes.api.controllers
 
+import jakarta.validation.Valid
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import me.bpxdevjr.notes.api.security.AuthService
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 class AuthController(private val authService: AuthService) {
 
     data class AuthRequest(
@@ -24,7 +25,7 @@ class AuthController(private val authService: AuthService) {
     )
 
     @PostMapping("/register")
-    fun register (@RequestBody body: AuthRequest) {
+    fun register (@Valid @RequestBody body: AuthRequest) {
         authService.register(body.email, body.password)
     }
 
